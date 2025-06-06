@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zephyr | Create</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="/style/create.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="/home">
+            <div class="logo">Zephyr</div>
+        </a>
+        <nav class="right-section">
+            <a href="/home">Home</a>
+        </nav>
+    </header>
+
+
+    <!-- Edit Form -->
+    <div class="container">
+        <h2>Create Post</h2>
+        <% if (currentUser) { %>
+        <form action="/home/create" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label><br>
+                <input type="text" name="title" id="title" value="" required
+                    style="width: 50%; padding: 0.5rem; margin-top: 0.25rem;" />
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="body">Body</label><br>
+                <textarea name="body" id="body" rows="6" required
+                    style="width: 50%; padding: 0.5rem; margin-top: 0.25rem; resize: none;"></textarea>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="imageUrl">Image URL</label><br>
+                <input type="text" name="imageUrl" id="imageUrl"
+                    style="width: 50%; padding: 0.5rem; margin-top: 0.25rem;" />
+            </div>
+            <br>
+            <button type="submit" class="edit-btn">Publish Post</button>
+        </form>
+        <% } else { %>
+            <p>You must be <a href="/login">logged in</a> to create a post.</p>
+        <% } %>
+    </div>
+    <script>
+        const fileInput = document.getElementById('imageFile');
+        const urlInput = document.getElementById('imageURL');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                urlInput.disabled = true;
+                removeFileBtn.style.display = 'inline-block';
+            } else {
+                urlInput.disabled = false;
+                removeFileBtn.style.display = 'none';
+            }
+        });
+
+        urlInput.addEventListener('input', () => {
+            if (urlInput.value.trim() !== "") {
+                fileInput.disabled = true;
+                removeFileBtn.style.display = 'none';
+            } else {
+                fileInput.disabled = false;
+            }
+        });
+
+        removeFileBtn.addEventListener('click', () => {
+            fileInput.value = "";
+            fileInput.dispatchEvent(new Event('change'));
+        });
+    </script>
+
+</body>
+
+</html>

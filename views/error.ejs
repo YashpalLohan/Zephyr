@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zephyr | Error</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="/style/styles.css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        .error-message {
+            color: #dc3545;
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #dc3545;
+            border-radius: 4px;
+            background-color: #f8d7da;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-container">
+            <h1>Oops! Something went wrong</h1>
+            <div class="error-message">
+                <%= error.message || 'An unexpected error occurred' %>
+            </div>
+            <a href="/home" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html> 

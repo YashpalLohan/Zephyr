@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zephyr | Admin Dashboard</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="/style/home.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .admin-dashboard {
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: 2rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-family: 'Rubik', sans-serif;
+            color: #666;
+            font-size: 1rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .stat-card .number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Rubik', sans-serif;
+            font-size: 1.5rem;
+            color: #333;
+            margin: 0 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-table th {
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .admin-table td {
+            font-family: 'Poppins', sans-serif;
+            color: #666;
+        }
+
+        .admin-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view-btn {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .delete-btn {
+            background-color: #dc2626;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background-color: #dc2626;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-left: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .admin-dashboard {
+                padding: 1rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .action-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/home">
+            <div class="logo">Zephyr</div>
+        </a>
+        <div class="right-section">
+            <a href="/home" class="create-btn">
+                <i class="fas fa-home"></i>
+                Back to Home
+            </a>
+            <details class="user-icon-dropdown">
+                <summary>
+                    <div class="user-icon-container">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="username">
+                            <%= currentUser.username %>
+                            <span class="admin-badge">Admin</span>
+                        </div>
+                    </div>
+                </summary>
+                <div class="dropdown-menu">
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </details>
+        </div>
+    </header>
+
+    <div class="admin-dashboard">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Admin Dashboard</h1>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>Total Posts</h3>
+                <div class="number"><%= posts.length %></div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="number"><%= users.length %></div>
+            </div>
+            <div class="stat-card">
+                <h3>Admin Users</h3>
+                <div class="number"><%= users.filter(user => user.isAdmin).length %></div>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">Recent Posts</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% posts.forEach(post => { %>
+                        <tr>
+                            <td><%= post.title %></td>
+                            <td>
+                                <%= post.author ? post.author.username : 'Anonymous' %>
+                                <% if (post.author && post.author.isAdmin) { %>
+                                    <span class="admin-badge">Admin</span>
+                                <% } %>
+                            </td>
+                            <td><%= new Date(post.createdAt).toLocaleDateString() %></td>
+                            <td>
+                                <a href="/home/<%= post._id %>/edit" class="action-btn view-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Edit
+                                </a>
+                                <form action="/home/<%= post._id %>/delete" method="POST" style="display:inline;">
+                                    <button type="submit" class="action-btn delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-section">
+            <h2 class="section-title">User Management</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.name %></td>
+                            <td>
+                                <% if (user.isAdmin) { %>
+                                    <span class="admin-badge">Admin</span>
+                                <% } else { %>
+                                    User
+                                <% } %>
+                            </td>
+                            <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('click', function (e) {
+            const dropdown = document.querySelector('.user-icon-dropdown');
+            if (dropdown && !dropdown.contains(e.target)) {
+                dropdown.removeAttribute('open');
+            }
+        });
+    </script>
+</body>
+</html> 

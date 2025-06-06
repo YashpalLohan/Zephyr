@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zephyr | Home</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="/style/home.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <a href="/home">
+            <div class="logo">Zephyr</div>
+        </a>
+        <div class="right-section">
+            <% if (currentUser) { %>
+                <a href="/home/create" class="create-btn">
+                    <i class="fas fa-plus"></i>
+                    Create Post
+                </a>
+                <% if (isAdmin) { %>
+                    <a href="/admin" class="admin-btn">
+                        <i class="fas fa-shield-alt"></i>
+                        Admin Dashboard
+                    </a>
+                <% } %>
+                <details class="user-icon-dropdown">
+                    <summary>
+                        <div class="user-icon-container">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="username">
+                                <%= currentUser.username %>
+                                <% if (isAdmin) { %>
+                                    <span class="admin-badge">Admin</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </summary>
+                    <div class="dropdown-menu">
+                        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </details>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/signup">Register</a>
+            <% } %>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Latest Posts</h2>
+        <div class="posts">
+            <% if (typeof posts !== 'undefined' && posts && posts.length > 0) { %>
+                <% posts.forEach(post => { %>
+                    <article class="post">
+                        <div class="post-header">
+                            <div class="author-info">
+                                <span class="author-name">
+                                    <%= post.author ? post.author.username : 'Anonymous' %>
+                                    <% if (post.author && post.author.isAdmin) { %>
+                                        <span class="admin-badge">Admin</span>
+                                    <% } %>
+                                </span>
+                                <span class="post-date"><%= new Date(post.createdAt).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                }) %></span>
+                            </div>
+                        </div>
+                        <div class="post-info">
+                            <h3><%= post.title %></h3>
+                            <p><%= post.body %></p>
+                            <% if (post.imageUrl) { %>
+                                <div class="post-image-container">
+                                    <img src="<%= post.imageUrl %>" alt="<%= post.title %>" />
+                                </div>
+                            <% } %>
+                            <% if (post.tags && post.tags.length > 0) { %>
+                                <div class="post-tags">
+                                    <% post.tags.forEach(tag => { %>
+                                        <span class="post-tag"><%= tag %></span>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                        </div>
+                        <% if (currentUser && (isAdmin || (!post.author && post._id.toString() === '68416f1fa09c58f82556ccce') || (post.author && post.author._id.toString() === currentUser._id.toString()))) { %>
+                            <div class="post-actions">
+                                <a href="/home/<%= post._id %>/edit" class="edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Edit
+                                </a>
+                                <form action="/home/<%= post._id %>/delete" method="POST" style="display:inline;">
+                                    <button type="submit" class="del-btn">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        <% } %>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <div class="no-posts">
+                    <p>No posts yet. Be the first to share your thoughts!</p>
+                    <% if (currentUser) { %>
+                        <a href="/home/create" class="create-btn">
+                            <i class="fas fa-plus"></i>
+                            Create Your First Post
+                        </a>
+                    <% } else { %>
+                        <p>Please <a href="/login">login</a> to create posts.</p>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('click', function (e) {
+            const dropdown = document.querySelector('.user-icon-dropdown');
+            if (dropdown && !dropdown.contains(e.target)) {
+                dropdown.removeAttribute('open');
+            }
+        });
+    </script>
+</body>
+
+</html>

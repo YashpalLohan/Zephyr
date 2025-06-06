@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zephyr | Sign Up</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="/style/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form id="signupForm" method="post" action="/register">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Set Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="button1">Sign Up</button>
+            <div class="divider">Or</div>
+            <div class="form-switch-text">
+                Already have an account? <a href="/login">Log in</a>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

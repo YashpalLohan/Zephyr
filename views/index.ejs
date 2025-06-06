@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zephyr | Demo</title>
+    <link rel="icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="style/demo.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">Zephyr</div>
+        <div class="auth-buttons">
+            <a href="/signup" class="btn signup-btn">Sign Up</a>
+            <a href="/login" class="btn login-btn">Login</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Latest Posts</h2>
+
+        <% const posts=[ { title: "The Future of Sustainable Living" ,
+            description: "Explore innovative approaches to eco-friendly living and how they can shape a better future for our planet."
+            , image: "/images/one.png" }, { title: "Mastering the Art of Remote Work" ,
+            description: "Discover essential tips and strategies for maximizing productivity and maintaining work-life balance while working remotely."
+            , image: "/images/two.png" }, { title: "The Power of Mindfulness in Daily Life" ,
+            description: "Learn how incorporating mindfulness practices into your routine can reduce stress, enhance focus, and improve overall well-being."
+            , image: "/images/three.png" }, { title: "Exploring the World of Coffee Brewing" ,
+            description: "Dive into the fascinating world of coffee, from bean origins to brewing techniques, and elevate your coffee experience."
+            , image: "/images/four.png" }, { title: "The Rise of Electric Vehicles" ,
+            description: "Examine the growing trend of electric vehicles, their environmental impact, and the future of transportation."
+            , image: "/images/five.png" } ]; %>
+
+            <% posts.forEach(post=> { %>
+                <div class="post">
+                    <div class="post-info">
+                        <h3>
+                            <%= post.title %>
+                        </h3>
+                        <p>
+                            <%= post.description %>
+                        </p>
+                    </div>
+                    <img src="<%= post.image %>" alt="Post Image" />
+                </div>
+                <% }) %>
+    </div>
+</body>
+
+</html>
