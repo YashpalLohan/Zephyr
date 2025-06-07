@@ -17,10 +17,10 @@ yarn-error.log
 .DS_Store
 Thumbs.db
 
-# Logs
-logs
-*.log
-
 # Build output
 dist/
-build/ 
+build/
+
+# Logs
+logs/
+*.log 
