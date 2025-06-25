@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
@@ -6,6 +7,7 @@ const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/users')
+const { ensureAdminUser } = require('./models/users');
 
 // Import routes
 const indexRouter = require('./routes/index');
@@ -13,9 +15,9 @@ const postRouter = require('./routes/posts');
 
 const app = express()
 
-// Hardcoded MongoDB URI and Port
-const PORT = 3000
-const MONGO_URI = 'mongodb://localhost:27017/blog'
+// Use environment variables with fallbacks
+const PORT = process.env.PORT || 3000
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/blog'
 
 // MongoDB connection options
 const mongooseOptions = {
@@ -25,10 +27,12 @@ const mongooseOptions = {
 
 // Connect to MongoDB with error handling
 mongoose.connect(MONGO_URI, mongooseOptions)
-    .then(() => {
+    .then(async () => {
         console.log('Successfully connected to MongoDB.');
         console.log('Database:', mongoose.connection.db.databaseName);
         console.log('Host:', mongoose.connection.host);
+        // Ensure admin user exists after DB connection
+        await ensureAdminUser();
     })
     .catch(err => {
         console.error('MongoDB connection error:', err);
@@ -65,7 +69,7 @@ app.use(expressSession({
         ttl: 14 * 24 * 3600 // = 14 days. Default
     }),
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // Always false for dev, only true in production with HTTPS
         httpOnly: true,
         maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
     }
@@ -77,7 +81,23 @@ app.use(passport.session())
 
 passport.use(new LocalStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+// Add detailed logging to deserialization
+passport.deserializeUser(async function(id, done) {
+    console.log('Deserializing user:', id);
+    try {
+        let user;
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            user = await User.findById(id);
+        } else {
+            user = await User.findOne({ username: id });
+        }
+        console.log('User found during deserialization:', user);
+        done(null, user);
+    } catch (err) {
+        console.error('Error during deserialization:', err);
+        done(err, null);
+    }
+});
 
 // Add middleware to make user and isAdmin available to all routes
 app.use((req, res, next) => {
@@ -126,4 +146,6 @@ app.use((req, res) => {
     });
 });
 
-app.listen(PORT)
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

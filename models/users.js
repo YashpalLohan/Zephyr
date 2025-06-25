@@ -32,19 +32,19 @@ UserSchema.methods.isAdminUser = function() {
 module.exports = mongoose.model('User', UserSchema)
 
 // Create admin user if it doesn't exist
-const createAdminUser = async () => {
-    // First, remove any existing admin user
-    await mongoose.model('User').deleteOne({ username: 'admin' })
-    
-    // Create new admin user with custom credentials
-    const admin = new mongoose.model('User')({
-        username: 'admin', 
-        name: 'Admin Yashpal',
-        isAdmin: true
-    })
-    
-    await mongoose.model('User').register(admin, '0.0.0.0.'); 
+async function ensureAdminUser() {
+    const existing = await mongoose.model('User').findOne({ username: 'admin' });
+    if (!existing) {
+        const admin = new mongoose.model('User')({
+            username: 'admin',
+            name: 'Admin Yashpal',
+            isAdmin: true
+        });
+        await mongoose.model('User').register(admin, '0.0.0.0.');
+        console.log('Admin user created.');
+    } else {
+        console.log('Admin user already exists.');
+    }
 }
 
-// Call the function to create admin user
-createAdminUser()
+module.exports.ensureAdminUser = ensureAdminUser;

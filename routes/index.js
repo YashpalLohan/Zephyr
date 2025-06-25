@@ -5,6 +5,7 @@ const postModel = require('../models/post');
 const passport = require('passport');
 
 function isLoggedIn(req, res, next) {
+    console.log('isAuthenticated:', req.isAuthenticated());
     if (req.isAuthenticated()) return next();
     res.redirect('/login');
 }
@@ -287,14 +288,17 @@ router.get('/admin', isAdmin, async (req, res) => {
 router.post('/auth', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
-            return next(err);
+            console.error('Login error:', err);
+            return res.status(500).render('error', { error: { message: 'Internal server error during login.' } });
         }
         if (!user) {
-            return res.redirect('/login');
+            console.warn('Login failed: Invalid username or password.', info);
+            return res.status(401).render('error', { error: { message: 'Invalid username or password.' } });
         }
         req.logIn(user, (err) => {
             if (err) {
-                return next(err);
+                console.error('Login session error:', err);
+                return res.status(500).render('error', { error: { message: 'Failed to establish login session.' } });
             }
             // Redirect to home page after successful login
             res.redirect('/home');
